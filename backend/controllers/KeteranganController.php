@@ -11,6 +11,7 @@ use backend\models\Capil;
 use backend\models\Akun;
 use backend\models\UserForm;
 use backend\models\Daftar;
+use backend\models\RegionProvince;
 
 use backend\models\KeteranganSearch;
 use backend\models\PendidikanSearch;
@@ -32,174 +33,183 @@ class KeteranganController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
+      return [
+        'verbs' => [
+          'class' => VerbFilter::className(),
+          'actions' => [
+            'delete' => ['POST'],
+          ],
+        ],
+      ];
     }
 
+
+    public function actions()
+    {
+      return [
+        'depdrop-options' => [
+          'class' => \fredyns\region\actions\DepdropOptions::class,
+          'modelClass' => \fredyns\region\models\City::class,
+          'parentAttributes' => [
+            'province_id',
+          ],
+        ],
+      ];
+    }
     /**
      * Lists all Keterangan models.
      * @return mixed
      */
 
 
-  public function getProvinces()
-    {
-       return (new \yii\db\Query())
-       ->select('*')
-       ->from('drhidn_provinsi')
-       ->orderBy(['kec_nama' => SORT_DESC])
-       ->all(\yii::$app->db);
-   } 
 
- public function actionCreateidentitas()
-    {
-        $model = new Keterangan();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->keterangan_id]);
-        }
+  
 
-        return $this->render('createidentitas', [
-            'model' => $model,
-        ]);
+   public function actionCreateidentitas()
+   {
+    $model = new Keterangan();
+
+    if ($model->load(Yii::$app->request->post()) && $model->save()) {
+      return $this->redirect(['view', 'id' => $model->keterangan_id]);
     }
 
+    return $this->render('createidentitas', [
+      'model' => $model,
+      'datakecamatan' => $this->getProvinces(),
+    ]);
+  }
 
 
-    public function actionIndex()
-    {
-        $searchModel = new KeteranganSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
- public function actionKeloladata()
-    {
-        $tgl =Yii::$app->formatter->asDatetime('now', 'php:Y-m-d');
-        $tglcari = '2020-09-03';
+  public function actionIndex()
+  {
+    $searchModel = new KeteranganSearch();
+    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $tanggal = Pendidikan::find()
+    return $this->render('index', [
+      'searchModel' => $searchModel,
+      'dataProvider' => $dataProvider,
+    ]);
+  }
+  public function actionKeloladata()
+  {
+    $tgl =Yii::$app->formatter->asDatetime('now', 'php:Y-m-d');
+    $tglcari = '2020-09-03';
+
+    $tanggal = Pendidikan::find()
         // -> where([$tglcari '>='"pendidikan_datehapus"])->all();
-        ->where('pendidikan_datehapus >= :userid', [':userid' => $tglcari])->all();
+    ->where('pendidikan_datehapus >= :userid', [':userid' => $tglcari])->all();
         // var_dump($tanggal);die();
 
-        $searchModel = new PendidikanSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->where(':tglsekarang  >= pendidikan_datehapus  AND pendidikan_status = :pendidikan_status ', [':tglsekarang' => $tgl ,':pendidikan_status' => 1])->orderBy('pendidikan_datehapus ASC');
+    $searchModel = new PendidikanSearch();
+    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    $dataProvider->query->where(':tglsekarang  >= pendidikan_datehapus  AND pendidikan_status = :pendidikan_status ', [':tglsekarang' => $tgl ,':pendidikan_status' => 1])->orderBy('pendidikan_datehapus ASC');
         // $dataProvider->query->where('field1 = :field1 AND field2 = :field2', [':field1' => 1, ':field2' => 'A']);
            // $lima_dataProvider->pagination->pageSize=10;
 
-        return $this->render('keloladatapencaker', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
- public function actionKeloladatapenempatan()
-    {
-        $tgl =Yii::$app->formatter->asDatetime('now', 'php:Y-m-d');
-        $tglcari = '2020-09-03';
+    return $this->render('keloladatapencaker', [
+      'searchModel' => $searchModel,
+      'dataProvider' => $dataProvider,
+    ]);
+  }
+  public function actionKeloladatapenempatan()
+  {
+    $tgl =Yii::$app->formatter->asDatetime('now', 'php:Y-m-d');
+    $tglcari = '2020-09-03';
 
-        $tanggal = Pendidikan::find()
+    $tanggal = Pendidikan::find()
         // -> where([$tglcari '>='"pendidikan_datehapus"])->all();
-        ->where('pendidikan_datehapus >= :userid', [':userid' => $tglcari])->all();
+    ->where('pendidikan_datehapus >= :userid', [':userid' => $tglcari])->all();
         // var_dump($tanggal);die();
 
-        $searchModel = new PendidikanSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->where(':tglsekarang  <= pendidikan_datehapus  AND pendidikan_status = :pendidikan_status ', [':tglsekarang' => $tgl ,':pendidikan_status' => [1,2]])->orderBy('pendidikan_datehapus ASC');
+    $searchModel = new PendidikanSearch();
+    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    $dataProvider->query->where(':tglsekarang  <= pendidikan_datehapus  AND pendidikan_status = :pendidikan_status ', [':tglsekarang' => $tgl ,':pendidikan_status' => [1,2]])->orderBy('pendidikan_datehapus ASC');
         // $dataProvider->query->where('field1 = :field1 AND field2 = :field2', [':field1' => 1, ':field2' => 'A']);
            // $lima_dataProvider->pagination->pageSize=10;
 
-        return $this->render('keloladatapencakerpenempatan', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+    return $this->render('keloladatapencakerpenempatan', [
+      'searchModel' => $searchModel,
+      'dataProvider' => $dataProvider,
+    ]);
+  }
 
-     public function actionMonitorpencaker()
-    {
-        $tgl =Yii::$app->formatter->asDatetime('now', 'php:Y-m-d');
-        $tglcari = '2020-09-03';
+  public function actionMonitorpencaker()
+  {
+    $tgl =Yii::$app->formatter->asDatetime('now', 'php:Y-m-d');
+    $tglcari = '2020-09-03';
 
-        $tanggal = Pendidikan::find()
+    $tanggal = Pendidikan::find()
         // -> where([$tglcari '>='"pendidikan_datehapus"])->all();
-        ->where('pendidikan_datehapus >= :userid', [':userid' => $tglcari])->all();
+    ->where('pendidikan_datehapus >= :userid', [':userid' => $tglcari])->all();
         // var_dump($tanggal);die();
 
-        $searchModel = new PendidikanSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    $searchModel = new PendidikanSearch();
+    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         // $dataProvider->query->where(':tglsekarang  <= pendidikan_datehapus  AND pendidikan_status = :pendidikan_status ', [':tglsekarang' => $tgl ,':pendidikan_status' => [1,2]])->orderBy('pendidikan_datehapus ASC');
         // $dataProvider->query->where('field1 = :field1 AND field2 = :field2', [':field1' => 1, ':field2' => 'A']);
            // $lima_dataProvider->pagination->pageSize=10;
 
-        return $this->render('monitorpencaker', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+    return $this->render('monitorpencaker', [
+      'searchModel' => $searchModel,
+      'dataProvider' => $dataProvider,
+    ]);
+  }
 
-    public function actionPenempatan($id){
-$penempatan = Pendidikan::find()
-        -> where(['id_daftar'=> $id])->one();
-$nama = Keterangan::find()
-        -> where(['id_daftar'=> $id])->one();
-        $penempatan->pendidikan_status = 2;
-        $penempatan->save();
-        $nama->keterangan_pendidikanstatus =2;
- $nama->save();
-        Yii::$app->session->setFlash('info', 'Data Pencaker :'.$nama->keterangan_nama.'  NIK :'.$id.' Telah Ditempatkan'); 
-        return $this->redirect('keloladatapencakerpenempatan');
+  public function actionPenempatan($id){
+    $penempatan = Pendidikan::find()
+    -> where(['id_daftar'=> $id])->one();
+    $nama = Keterangan::find()
+    -> where(['id_daftar'=> $id])->one();
+    $penempatan->pendidikan_status = 2;
+    $penempatan->save();
+    $nama->keterangan_pendidikanstatus =2;
+    $nama->save();
+    Yii::$app->session->setFlash('info', 'Data Pencaker :'.$nama->keterangan_nama.'  NIK :'.$id.' Telah Ditempatkan'); 
+    return $this->redirect('keloladatapencakerpenempatan');
 
-    }
+  }
 
-       public function actionNonaktif($id){
-$penempatan = Pendidikan::find()
-        -> where(['id_daftar'=> $id])->one();
-$nama = Keterangan::find()
-        -> where(['id_daftar'=> $id])->one();
-        $penempatan->pendidikan_status = 3;
-        $penempatan->save();
-$nama->keterangan_pendidikanstatus =3;
- $nama->save();
-        Yii::$app->session->setFlash('danger', 'Data Pencaker :'.$nama->keterangan_nama.'  NIK :'.$id.' Telah Di NOn-AKtifkan'); 
-        return $this->redirect('keloladata');
+  public function actionNonaktif($id){
+    $penempatan = Pendidikan::find()
+    -> where(['id_daftar'=> $id])->one();
+    $nama = Keterangan::find()
+    -> where(['id_daftar'=> $id])->one();
+    $penempatan->pendidikan_status = 3;
+    $penempatan->save();
+    $nama->keterangan_pendidikanstatus =3;
+    $nama->save();
+    Yii::$app->session->setFlash('danger', 'Data Pencaker :'.$nama->keterangan_nama.'  NIK :'.$id.' Telah Di NOn-AKtifkan'); 
+    return $this->redirect('keloladata');
 
-    }
+  }
 
-    public function actionUpdatepencaker($id)
-    {
+  public function actionUpdatepencaker($id)
+  {
 
-        $modelpendidikan = new ActiveDataProvider([
+    $modelpendidikan = new ActiveDataProvider([
 
-            'query' => Pendidikan::find()->where(['id_daftar'=> $id])
+      'query' => Pendidikan::find()->where(['id_daftar'=> $id])
 
-        ]);
+    ]);
 
-        $modelpengalaman = new ActiveDataProvider([
+    $modelpengalaman = new ActiveDataProvider([
 
-            'query' => Pengalaman::find()->where(['id_daftar'=> $id])
+      'query' => Pengalaman::find()->where(['id_daftar'=> $id])
 
-        ]);
+    ]);
 
-        $modellokasi = Lokasi::find()
-        -> where(['id_daftar'=> $id])->one();
-        return $this->render('updatepencaker',[
-            'id'=>$id,
-            'modelpendidikan' => $modelpendidikan,
-            'modelpengalaman' => $modelpengalaman,
-            'modellokasi' => $modellokasi,
-        ]);
-        
-    }
+    $modellokasi = Lokasi::find()
+    -> where(['id_daftar'=> $id])->one();
+    return $this->render('updatepencaker',[
+      'id'=>$id,
+      'modelpendidikan' => $modelpendidikan,
+      'modelpengalaman' => $modelpengalaman,
+      'modellokasi' => $modellokasi,
+    ]);
+
+  }
 
     /**
      * Displays a single Keterangan model.
@@ -209,44 +219,44 @@ $nama->keterangan_pendidikanstatus =3;
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+      return $this->render('view', [
+        'model' => $this->findModel($id),
+      ]);
     }
 
-        public function actionCek()
+    public function actionCek()
     {
-        $modelUser = new UserForm;
-        $modelAkun = new Akun;
-        $today = date('Y-m-d H:i:s');
-        $todayy = date('Ymd');
-        $model = new Capil();
-        $modeldaftar = new Daftar();
+      $modelUser = new UserForm;
+      $modelAkun = new Akun;
+      $today = date('Y-m-d H:i:s');
+      $todayy = date('Ymd');
+      $model = new Capil();
+      $modeldaftar = new Daftar();
 
-        if ($model->load(Yii::$app->request->post())) {
+      if ($model->load(Yii::$app->request->post())) {
 
-            $params = [
-              "nik"=>$model->capil_nik,
-              "user_id"=>"1010201912196devi",
-              "password"=>"acxkom1377",
-              "ip_user"=>Yii::$app->getRequest()->getUserIP(),
-            ];
-            $curl = new \linslin\yii2\curl\Curl();
+        $params = [
+          "nik"=>$model->capil_nik,
+          "user_id"=>"1010201912196devi",
+          "password"=>"acxkom1377",
+          "ip_user"=>Yii::$app->getRequest()->getUserIP(),
+        ];
+        $curl = new \linslin\yii2\curl\Curl();
             // $apiUrl = 'http://172.16.160.43:8080/dukcapil/get_json/13-77/1377_diskominfo/adm_desa';
-            $apiUrl = 'http://180.250.53.159:8080/dukcapil/get_json/13-77/1377_diskominfo/adm_desa';
-            $getAPI = $curl->setRequestBody(json_encode($params))
-                ->setHeaders([
-                    'Content-Type' => 'application/json; charset=UTF-8',
-                 ])
-                ->post($apiUrl);
-            $rest = json_decode($getAPI,true);
+        $apiUrl = 'http://180.250.53.159:8080/dukcapil/get_json/13-77/1377_diskominfo/adm_desa';
+        $getAPI = $curl->setRequestBody(json_encode($params))
+        ->setHeaders([
+          'Content-Type' => 'application/json; charset=UTF-8',
+        ])
+        ->post($apiUrl);
+        $rest = json_decode($getAPI,true);
 
-            $dataPenduduk = $rest['content'][0];
-if(count($dataPenduduk) == 33){
-$carinik = Capil::findOne(['capil_nik'=>$dataPenduduk['NIK']]);
+        $dataPenduduk = $rest['content'][0];
+        if(count($dataPenduduk) == 33){
+          $carinik = Capil::findOne(['capil_nik'=>$dataPenduduk['NIK']]);
 // var_dump($carinik==true);die();
 
-     if (count($dataPenduduk) == 33 and $dataPenduduk['NO_KAB'] == 77 and !$carinik) {
+          if (count($dataPenduduk) == 33 and $dataPenduduk['NO_KAB'] == 77 and !$carinik) {
  // var_dump(
         // if(!$carinik){
             $model->capil_nik = $dataPenduduk['NIK'];
@@ -290,58 +300,58 @@ $carinik = Capil::findOne(['capil_nik'=>$dataPenduduk['NIK']]);
 
 
 
-                    $modelUser->username = $model->capil_nik;
-                    $modelUser->level = 40;
-                    $modelUser->status = 10;
-                    $kode = strtotime("now");
+            $modelUser->username = $model->capil_nik;
+            $modelUser->level = 40;
+            $modelUser->status = 10;
+            $kode = strtotime("now");
                     //var_dump( $difference); die();
-                    $modelUser->password = $kode;
-                    $modelUser->validate();
-                    $modelUser->saveUser();
+            $modelUser->password = $kode;
+            $modelUser->validate();
+            $modelUser->saveUser();
 
-                    $modelAkun->id_user = $modelUser->id;
-                    $modelAkun->id_daftar = $model->capil_nik;
-                    $modelAkun->akun_status = 1;
-                    $modelAkun->akun_kode = $kode;
-                    $modelAkun->akun_pass = $kode;
-                    $modelAkun->save(false);
-
-
-                      $kode = strtotime($today);
-                      $angka =substr($todayy,2,-2);
-                     $modeldaftar->daftar_id = $model->capil_nik;
-                     $modeldaftar->daftar_nik = $model->capil_nik;
-                     $modeldaftar->daftar_tgl = $today;
-                     $modeldaftar->daftar_no = $angka.$todayy;
-                     $modeldaftar->save();
+            $modelAkun->id_user = $modelUser->id;
+            $modelAkun->id_daftar = $model->capil_nik;
+            $modelAkun->akun_status = 1;
+            $modelAkun->akun_kode = $kode;
+            $modelAkun->akun_pass = $kode;
+            $modelAkun->save(false);
 
 
-                     $modelketerangan = new Keterangan();
-  $modelketerangan->id_daftar         = $model->capil_nik;
-  $modelketerangan->keterangan_nama   = $model->capil_nama_lgkp;
-  $modelketerangan->keterangan_tempat = $model->capil_tmpt_lhr;
-  $modelketerangan->keterangan_tgl    = $model->capil_tgl_lhr;
-  if ($model->capil_jenis_klmin == 'Laki-Laki'){
-  $modelketerangan->keterangan_jkl    = 1;
+            $kode = strtotime($today);
+            $angka =substr($todayy,2,-2);
+            $modeldaftar->daftar_id = $model->capil_nik;
+            $modeldaftar->daftar_nik = $model->capil_nik;
+            $modeldaftar->daftar_tgl = $today;
+            $modeldaftar->daftar_no = $angka.$todayy;
+            $modeldaftar->save();
 
-  }elseif ($model->capil_jenis_klmin == 'Perempuan'){
-  $modelketerangan->keterangan_jkl    = 2;
 
-  }
-  $modelketerangan->keterangan_alamat = $model->capil_alamat;
-  $modelketerangan->keterangan_kel    = $model->capil_no_kel;
-  $modelketerangan->keterangan_kec    = $model->capil_no_kec;
-  $modelketerangan ->save(false);
+            $modelketerangan = new Keterangan();
+            $modelketerangan->id_daftar         = $model->capil_nik;
+            $modelketerangan->keterangan_nama   = $model->capil_nama_lgkp;
+            $modelketerangan->keterangan_tempat = $model->capil_tmpt_lhr;
+            $modelketerangan->keterangan_tgl    = $model->capil_tgl_lhr;
+            if ($model->capil_jenis_klmin == 'Laki-Laki'){
+              $modelketerangan->keterangan_jkl    = 1;
+
+            }elseif ($model->capil_jenis_klmin == 'Perempuan'){
+              $modelketerangan->keterangan_jkl    = 2;
+
+            }
+            $modelketerangan->keterangan_alamat = $model->capil_alamat;
+            $modelketerangan->keterangan_kel    = $model->capil_no_kel;
+            $modelketerangan->keterangan_kec    = $model->capil_no_kec;
+            $modelketerangan ->save(false);
 
      //}
 
-                   
 
- Yii::$app->session->setFlash('msg', '
-     <div class="alert alert-success alert-dismissable">
-     <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-     <strong>Pencarian Sukses! </strong> Data ditemukan dan disimpan.</div>'
-  );
+
+            Yii::$app->session->setFlash('msg', '
+             <div class="alert alert-success alert-dismissable">
+             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+             <strong>Pencarian Sukses! </strong> Data ditemukan dan disimpan.</div>'
+           );
 
 
 
@@ -350,45 +360,45 @@ $carinik = Capil::findOne(['capil_nik'=>$dataPenduduk['NIK']]);
   //       ]);
             // return $this->redirect(['capil', 'id' => $model->capil_id]);
             // return $this->redirect(['view', 'id' => $model->capil_id]);
-            }
+          }
 
-    elseif($dataPenduduk['NO_KAB'] !== 77){
+          elseif($dataPenduduk['NO_KAB'] !== 77){
        // var_dump(!$dataPenduduk['NO_KAB'] == 77);die();
-    Yii::$app->session->setFlash('danger', 'NIK Anda tidak terdaftar di Kota pariaman'); 
-            }
-            elseif($carinik==true){
-                 Yii::$app->session->setFlash('msg', '
-     <div class="alert alert-success alert-dismissable">
-     <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-     <strong>NIK ANDA SUDAH TERDAFTAR! </strong> Data ditemukan dan telah disimpan.</div>'
-  );
+            Yii::$app->session->setFlash('danger', 'NIK Anda tidak terdaftar di Kota pariaman'); 
+          }
+          elseif($carinik==true){
+           Yii::$app->session->setFlash('msg', '
+             <div class="alert alert-success alert-dismissable">
+             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+             <strong>NIK ANDA SUDAH TERDAFTAR! </strong> Data ditemukan dan telah disimpan.</div>'
+           );
 // var_dump(->capil_nama_lgkp);die();
-            return $this->render('capil', [
+           return $this->render('capil', [
             'model' => $carinik,
-        ]);
-     } 
-            }elseif (count($dataPenduduk) == 2) {
-                         Yii::$app->session->setFlash('msg', '
-     <div class="alert alert-warning alert-dismissable">
-     <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-     <strong>Kuota Pencarian Habis! </strong>...Waktu Selesai...</div>'
-  );
-           
-            }
+          ]);
+         } 
+       }elseif (count($dataPenduduk) == 2) {
+         Yii::$app->session->setFlash('msg', '
+           <div class="alert alert-warning alert-dismissable">
+           <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+           <strong>Kuota Pencarian Habis! </strong>...Waktu Selesai...</div>'
+         );
+
+       }
 
        
-         
 
-        }           
-        
-Yii::$app->session->setFlash('msg', '
-     <div class="alert alert-info alert-dismissable">
-     <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-     <strong>SILAHKAN MASUK NIK KOTA PARIAMAN! </strong></div>');
-        return $this->render('capil', [
-            'model' => $model,
-        ]);
-    }
+
+     }           
+
+     Yii::$app->session->setFlash('msg', '
+       <div class="alert alert-info alert-dismissable">
+       <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+       <strong>SILAHKAN MASUK NIK KOTA PARIAMAN! </strong></div>');
+     return $this->render('capil', [
+      'model' => $model,
+    ]);
+   }
 
     /**
      * Creates a new Keterangan model.
@@ -397,238 +407,306 @@ Yii::$app->session->setFlash('msg', '
      */
 
     public function actionPerbaharuifoto($id){
-         
- $model = $this->findModelfoto($id);
-            
- $oldFile = $model->lokasi_foto;
 
-         if ($model->load(Yii::$app->request->post())) {
+     $model = $this->findModelfoto($id);
 
-            $model->image = UploadedFile::getInstance($model, 'image');
+     $oldFile = $model->lokasi_foto;
+
+     if ($model->load(Yii::$app->request->post())) {
+
+      $model->image = UploadedFile::getInstance($model, 'image');
             // if (! $model->image) {
             //     $model->save();
             // }else{
-                if ($model->upload()) {
-                    if ($oldFile) {
-                        $this->deleteImgfoto($oldFile);
-                    }
-                    $model->save(false);
-                }       
-                Yii::$app->session->setFlash('success', '<strong> Photo Anda Berhasil Diperbaharui </strong>');  
-if (Yii::$app->user->identity->level == 1) {
+      if ($model->upload()) {
+        if ($oldFile) {
+          $this->deleteImgfoto($oldFile);
+        }
+        $model->save(false);
+      }       
+      Yii::$app->session->setFlash('success', '<strong> Photo Anda Berhasil Diperbaharui </strong>');  
+      if (Yii::$app->user->identity->level == 1) {
 
-            return $this->redirect(['keterangan/createpencaker','id' => $model->id_daftar]);
-}elseif (Yii::$app->user->identity->level == 40) {
-            return $this->redirect(['keterangan/create']);
+        return $this->redirect(['keterangan/createpencaker','id' => $model->id_daftar]);
+      }elseif (Yii::$app->user->identity->level == 40) {
+        return $this->redirect(['keterangan/create']);
 
-}
-                 }
-            
-        return $this->render('perbaharuifoto'
-       , [  // ubah ini
-          'model' => $model,]
-        );
+      }
     }
 
-public function actionPerbaharuifotopencaker($id){
-         
- $model = $this->findModelfoto($id);
-            
- $oldFile = $model->lokasi_foto;
+    return $this->render('perbaharuifoto'
+       , [  // ubah ini
+       'model' => $model,]
+     );
+  }
 
-         if ($model->load(Yii::$app->request->post())) {
+  public function actionPerbaharuifotopencaker($id){
 
-            $model->image = UploadedFile::getInstance($model, 'image');
+   $model = $this->findModelfoto($id);
+
+   $oldFile = $model->lokasi_foto;
+
+   if ($model->load(Yii::$app->request->post())) {
+
+    $model->image = UploadedFile::getInstance($model, 'image');
             // if (! $model->image) {
             //     $model->save();
             // }else{
-                if ($model->upload()) {
-                    if ($oldFile) {
-                        $this->deleteImgfoto($oldFile);
-                    }
-                    $model->save(false);
-                }       
-                Yii::$app->session->setFlash('success', '<strong> Photo Anda Berhasil Diperbaharui </strong>');  
-if (Yii::$app->user->identity->level == 1) {
+    if ($model->upload()) {
+      if ($oldFile) {
+        $this->deleteImgfoto($oldFile);
+      }
+      $model->save(false);
+    }       
+    Yii::$app->session->setFlash('success', '<strong> Photo Anda Berhasil Diperbaharui </strong>');  
+    if (Yii::$app->user->identity->level == 1) {
 
-            return $this->redirect(['keterangan/updatepencaker','id' => $model->id_daftar]);
-}elseif (Yii::$app->user->identity->level == 40) {
-            return $this->redirect(['keterangan/create']);
+      return $this->redirect(['keterangan/updatepencaker','id' => $model->id_daftar]);
+    }elseif (Yii::$app->user->identity->level == 40) {
+      return $this->redirect(['keterangan/create']);
 
-}
-                 }
-            
-        return $this->render('perbaharuifoto'
-       , [  // ubah ini
-          'model' => $model,]
-        );
     }
+  }
+
+  return $this->render('perbaharuifoto'
+       , [  // ubah ini
+       'model' => $model,]
+     );
+}
 
 private function deleteImgfoto($img){
-        $baseUrl = Yii::getAlias('@webroot/files/foto/'.$img);
-        @unlink($baseUrl);
-    }
-  protected function findModelfoto($id)
-    {
-        if (($model = Lokasi::findOne($id)) !== null) {
-            return $model;
-        }
+  $baseUrl = Yii::getAlias('@webroot/files/foto/'.$img);
+  @unlink($baseUrl);
+}
+protected function findModelfoto($id)
+{
+  if (($model = Lokasi::findOne($id)) !== null) {
+    return $model;
+  }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+  throw new NotFoundHttpException('The requested page does not exist.');
+}
+
+ // =====================================================
+
+    public function actionGetCities($id_kec)
+    {
+      $cities = (new \yii\db\Query())
+      ->select(['id','name'])
+      ->from('region_city')
+        // ->select('*')
+        // ->from('kelurahan')
+      ->where([
+        'province_id'=>$id_kec,
+      ])
+      ->all(\yii::$app->db);
+      \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      return [
+        'cities' => $cities,        
+      ];
     }
 
-        public function actionCreate()
+
+    public function actionGetDusun($id_kel)
     {
-        $model = new Keterangan();
-        $modelpendidikan = new Pendidikan();
-        $modellokasi = new Lokasi();
+      $dusun = (new \yii\db\Query())
+      ->select(['id','name'])
+      ->from('region_district')
+        // ->select('*')
+        // ->from('kelurahan')
+      ->where([
+        'city_id'=>$id_kel,
+      ])
+      ->all(\yii::$app->db);
+      \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      return [
+        'dusun' => $dusun,
         
-        $idname = Yii::$app->user->identity->username;
-        $modelketerangan = Keterangan::find()
-        -> where(['id_daftar'=> $idname])->one();
-        // var_dump( $idname);die();
-
-
-      if (Yii::$app->user->identity->level == 40){ 
-        $modelpendidikan = new ActiveDataProvider([
-        'query' => Pendidikan::find()->where(['id_daftar'=> $idname])
-        ]);
-
-        $modelpengalaman = new ActiveDataProvider([
-
-            'query' => Pengalaman::find()->where(['id_daftar'=> $idname])
-
-        ]);
-
-
-  
-        $modellokasi = Lokasi::find()
-        -> where(['id_daftar'=> $idname])->one();
-
-       
-
-        if ($modelketerangan->load(Yii::$app->request->post()) && $modelketerangan->save()) {
-
-
-            return $this->redirect(
-                // ['view', 'id' => $model->keterangan_id]
-                ['/pendidikan/createbiasa']);
-        }
-
-         return $this->render('create', [
-            'model' => $model,
-            'modelpendidikan' => $modelpendidikan,
-            'modelpengalaman' => $modelpengalaman,
-            'modellokasi' => $modellokasi,
-          
-        ]);
-         }       
+      ];
     }
 
+    public function getProvinces()
+    {
+     return (new \yii\db\Query())
+     ->select('*')
+     ->from('region_province')
+     ->orderBy(['name' => SORT_DESC])
+     ->all(\yii::$app->db);
+   } 
 
+   public function getKelurahan()
+   {
+     return (new \yii\db\Query())
+     ->select('*')
+     ->from('region_city')
+       // ->where(['id_kec'=>7])
+     ->orderBy(['name' => SORT_ASC])
+     ->all(\yii::$app->db);
+   } 
 
-        public function actionCreatepencaker($id)
-        {
+// ====================================================
+
+ public function actionCreate()
+    {
         $model = new Keterangan();
-        $modelid = $id;
-        $modelketerangan = Keterangan::find()
-        -> where(['id_daftar'=> $id])->one();
+        $idname = Yii::$app->user->identity->username;
 
-          $modelpendidikan = new ActiveDataProvider([
+        if ($model->load(Yii::$app->request->post()) ) {
 
-            'query' => Pendidikan::find()->where(['id_daftar'=> $id])
-
-        ]);
-
-        $modelpengalaman = new ActiveDataProvider([
-
-            'query' => Pengalaman::find()->where(['id_daftar'=> $id])
-
-        ]);
-
-
-  
-$modellokasi = Lokasi::find()
-        -> where(['id_daftar'=> $id])->one();
-
-    if ($modelketerangan->load(Yii::$app->request->post()) && $modelketerangan->save()) {
-            return $this->redirect(
-                               ['/pendidikan/createpencaker','id' => $id]);
+           $model->id_daftar = $idname ;
+           $model->save(false);
+            return $this->redirect(['/pendidikan/createbiasa']);
         }
 
         return $this->render('create', [
             'model' => $model,
-            'modelid' => $modelid,
-            'modelpendidikan' => $modelpendidikan,
-            'modelpengalaman' => $modelpengalaman,
-            'modellokasi' => $modellokasi,
+            'datakecamatan' => $this->getProvinces(),
         ]);
+    }
 
 
-         } 
-        
+// public function actionCreate()
+// {
+//   $model = new Keterangan();
+//   $modelpendidikan = new Pendidikan();
+//   $modellokasi = new Lokasi();
+
+//   $idname = Yii::$app->user->identity->username;
+//   $modelketerangan = Keterangan::find()
+//   -> where(['id_daftar'=> $idname])->one();
+//         // var_dump( $idname);die();
+
+
+//   if (Yii::$app->user->identity->level == 40){ 
+//     // $modelpendidikan = new ActiveDataProvider([
+//     //   'query' => Pendidikan::find()->where(['id_daftar'=> $idname])
+//     // ]);
+//     // $modelpengalaman = new ActiveDataProvider([
+//     //   'query' => Pengalaman::find()->where(['id_daftar'=> $idname])
+//     // ]);
+
+//     $modellokasi = Lokasi::find()
+//     -> where(['id_daftar'=> $idname])->one();
+
+//     if ($modelketerangan->load(Yii::$app->request->post()) && $modelketerangan->save()) {
+//       return $this->redirect(
+//                 // ['view', 'id' => $model->keterangan_id]
+//         ['/pendidikan/createbiasa']);
+//     }
+//     return $this->render('create', [
+//       'model' => $model,
+//       'modelpendidikan' => $modelpendidikan,
+//       'modelpengalaman' => $modelpengalaman,
+//       'modellokasi' => $modellokasi,
+
+//     ]);
+//   }       
+// }
 
 
 
-      public function actionLihat($id)
-    {
+public function actionCreatepencaker($id)
+{
+  $model = new Keterangan();
+  $modelid = $id;
+  $modelketerangan = Keterangan::find()
+  -> where(['id_daftar'=> $id])->one();
+
+  $modelpendidikan = new ActiveDataProvider([
+
+    'query' => Pendidikan::find()->where(['id_daftar'=> $id])
+
+  ]);
+
+  $modelpengalaman = new ActiveDataProvider([
+
+    'query' => Pengalaman::find()->where(['id_daftar'=> $id])
+
+  ]);
+
+
+  
+  $modellokasi = Lokasi::find()
+  -> where(['id_daftar'=> $id])->one();
+
+  if ($modelketerangan->load(Yii::$app->request->post()) && $modelketerangan->save()) {
+    return $this->redirect(
+     ['/pendidikan/createpencaker','id' => $id]);
+  }
+
+  return $this->render('create', [
+    'model' => $model,
+    'modelid' => $modelid,
+    'modelpendidikan' => $modelpendidikan,
+    'modelpengalaman' => $modelpengalaman,
+    'modellokasi' => $modellokasi,
+  ]);
+
+
+} 
+
+
+
+
+public function actionLihat($id)
+{
 
  $modellokasi = Pendidikan::find()
-        -> where(['id_daftar'=> $id])->one();;
+ -> where(['id_daftar'=> $id])->one();;
 
-  if (Yii::$app->user->identity->level == 40) {
+ if (Yii::$app->user->identity->level == 40) {
 
-      $idname = Yii::$app->user->identity->username;
-    }elseif (Yii::$app->user->identity->level == 1) {
-      $idname = $modellokasi->id_daftar;
+  $idname = Yii::$app->user->identity->username;
+}elseif (Yii::$app->user->identity->level == 1) {
+  $idname = $modellokasi->id_daftar;
 
       // var_dump( $idname);die();
-     
-    }
 
-      $modelpendidikan = Pendidikan::find()
-        -> where(['id_daftar'=> $idname])->one();
-
-        return $this->render('lihat', [
-            'modelpendidikan' => $modelpendidikan,
-
-        ]);
-    }
-
-    public function actionKartu()
-{
-
-   // return $this->render('printt');
-   return $this->render('coba');
 }
 
-   public function actionKartubelakang()
-{
+$modelpendidikan = Pendidikan::find()
+-> where(['id_daftar'=> $idname])->one();
 
-   // return $this->render('printt');
-   return $this->render('cobabelakang');
+return $this->render('lihat', [
+  'modelpendidikan' => $modelpendidikan,
+
+]);
 }
 
-    public function actionKartupencaker($id)
+public function actionKartu()
 {
 
    // return $this->render('printt');
-   return $this->render('coba', [
-            'modelid' => $id,
-
-        ]);
+ return $this->render('coba');
 }
 
-   public function actionKartubelakangpencaker($id)
+public function actionKartubelakang()
 {
 
-       
    // return $this->render('printt');
-   return $this->render('cobabelakang', [
-            'modelid' => $id,
-            
+ return $this->render('cobabelakang');
+}
 
-        ]);
+public function actionKartupencaker($id)
+{
+
+   // return $this->render('printt');
+ return $this->render('coba', [
+  'modelid' => $id,
+
+]);
+}
+
+public function actionKartubelakangpencaker($id)
+{
+
+
+   // return $this->render('printt');
+ return $this->render('cobabelakang', [
+  'modelid' => $id,
+
+
+]);
 }
 
     // public function actionCreate($step = null)
@@ -668,36 +746,36 @@ $modellokasi = Lokasi::find()
      * @throws NotFoundHttpException if the model cannot be found
      */
 
-     public function actionUpdatedatadiri($id)
+    public function actionUpdatedatadiri($id)
     {
-        $modelketerangan = Keterangan::findOne(['id_daftar'=>$id]);
+      $modelketerangan = Keterangan::findOne(['id_daftar'=>$id]);
         // $model = $this->findModel($id);
    // var_dump($this->findModel($id));die;
 
-        if ($modelketerangan->load(Yii::$app->request->post()) && $modelketerangan->save()) {
+      if ($modelketerangan->load(Yii::$app->request->post()) && $modelketerangan->save()) {
 
-    Yii::$app->session->setFlash('success', 'DATA SUKSES DIPERBAHARUI'); 
+        Yii::$app->session->setFlash('success', 'DATA SUKSES DIPERBAHARUI'); 
 
-            return $this->redirect(['updatepencaker', 'id' => $id]);
-        }
+        return $this->redirect(['updatepencaker', 'id' => $id]);
+      }
 
-        return $this->render('update', [
-            'model' => $modelketerangan,
-        ]);
+      return $this->render('update', [
+        'model' => $modelketerangan,
+      ]);
     }
 
 
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+      $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->keterangan_id]);
-        }
+      if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        return $this->redirect(['view', 'id' => $model->keterangan_id]);
+      }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+      return $this->render('update', [
+        'model' => $model,
+      ]);
     }
 
     /**
@@ -709,9 +787,9 @@ $modellokasi = Lokasi::find()
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+      $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+      return $this->redirect(['index']);
     }
 
     /**
@@ -723,10 +801,10 @@ $modellokasi = Lokasi::find()
      */
     protected function findModel($id)
     {
-        if (($model = Keterangan::findOne($id)) !== null) {
-            return $model;
-        }
+      if (($model = Keterangan::findOne($id)) !== null) {
+        return $model;
+      }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+      throw new NotFoundHttpException('The requested page does not exist.');
     }
-}
+  }

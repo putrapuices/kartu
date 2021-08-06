@@ -19,9 +19,11 @@ $this->params['breadcrumbs'][] = $this->title;
   <?php if (Yii::$app->user->identity->level == 40){ ?>
     <?= $this->render('_form', [
         'model' => $model,
-        'modelpendidikan' => $modelpendidikan,
-        'modelpengalaman' => $modelpengalaman,
-        'modellokasi' => $modellokasi,
+        'datakecamatan' => $datakecamatan,
+        
+        // 'modelpendidikan' => $modelpendidikan,
+        // 'modelpengalaman' => $modelpengalaman,
+        // 'modellokasi' => $modellokasi,
 
         // 'step' => $step,
     ]) ?>

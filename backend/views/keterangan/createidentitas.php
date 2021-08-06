@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_formidentitas', [
         'model' => $model,
+        'datakecamatan' => $datakecamatan,
     ]) ?>
 
 </div>
