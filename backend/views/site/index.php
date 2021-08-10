@@ -19,7 +19,7 @@ $this->title = 'SELAMAT DATANG DI WEBSITE PENCARI KERJA';
     <div class="jumbotron">
         <h1>Congratulations!</h1>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+        <p class="lead">Anda berada pada Dashboard Aplikasi SIDAK</p>
 
         <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
     </div>
@@ -32,7 +32,7 @@ $this->title = 'SELAMAT DATANG DI WEBSITE PENCARI KERJA';
 
 
 
-<!-- ?php if (Yii::$app->user->identity->level == 40){ ?> -->
+<?php if (Yii::$app->user->identity->level == 40){ ?>
 <!-- ?php if (!$cekdata) {?> -->
 <?php
 echo SweetAlert::widget([
@@ -42,14 +42,14 @@ echo SweetAlert::widget([
 
         'type' => SweetAlert::TYPE_SUCCESS,
         'showConfirmButton' => false,
-        'text' => Html::a('Klik Untuk Pengisian Data', ['keterangan/createidentitas'/*, 'id' => $id_bio*/], ['class' => 'profile-link']),
+        'text' => Html::a('Klik Untuk Pengisian Data', ['keterangan/create'/*, 'id' => $id_bio*/], ['class' => 'profile-link']),
         'theme' => SweetAlert::THEME_FACEBOOK,
         'html' => true
 
     ]            // self.location="http://ppdb.pariamankota.go.id";
 
 ]);?>
-<!-- ?php }?> -->
+<?php }?>
 <!-- ?php }?> -->
 
             <!-- <div class="col-lg-4">

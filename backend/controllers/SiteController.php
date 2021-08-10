@@ -101,7 +101,13 @@ class SiteController extends Controller
             $modeldaftar->daftar_no = $angka.$todayy;
             $modeldaftar->save(false);
             // return $this->goHome();
-            return $this->render('/site/index');
+            // return $this->render('/site/index');
+            if ($modelAkun->save()) {
+                  Yii::$app->session->setFlash('success', "User anda sukses didaftarakan Silahkan Login."); 
+              } else {
+                  Yii::$app->session->setFlash('error', "User not saved.");
+              }
+               return $this->redirect(['login']);
         }
 
         return $this->render('/layouts/xray/main-signup-xtray', [

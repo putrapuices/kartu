@@ -50,11 +50,16 @@ class Pendidikan extends \yii\db\ActiveRecord
     {
         return [
             [['pendidikan_nemipk'], 'number'],
+            [['pendidikan_nemipk'], 'required'],
             [['id_sekolah', 'id_jurusan', 'id_daftar', 'pendidikan_inggris', 'pendidikan_jerman', 'pendidikan_jepang', 'pendidikan_mandarin', 'pendidikan_belanda', 'pendidikan_perancis', 'pendidikan_arab', 'pendidikan_jkl', 'id_jabatan', 'id_pekerjaan', 'pendidikan_status'], 'integer'],
+            [['id_sekolah', 'id_jurusan', ], 'required'],
             [['pendidikan_thntamat', 'pendidikan_date', 'pendidikan_datehapus', 'pendidikan_datepenempatan'], 'safe'],
+            [['pendidikan_thntamat'], 'required'],            
             [['pendidikan_keterampilan'], 'string', 'max' => 200],
+            
             [['pendidikan_bahasa'], 'string', 'max' => 90],
             [['pendidikan_namasekolah'], 'string', 'max' => 150],
+            [['pendidikan_namasekolah'], 'required'],
             [['id_daftar'], 'exist', 'skipOnError' => true, 'targetClass' => Daftar::className(), 'targetAttribute' => ['id_daftar' => 'daftar_id']],
         ];
     }

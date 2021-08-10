@@ -18,6 +18,24 @@ $fieldOptions1 = [
 ];
 ?>
 
+
+<!-- // display success message -->
+<?php if (Yii::$app->session->hasFlash('success')): ?>
+    <div class="alert alert-success alert-dismissable">
+         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+         <h4><i class="icon fa fa-check"></i>Saved!</h4>
+         <?= Yii::$app->session->getFlash('success') ?>
+    </div>
+<?php endif; ?>
+
+<!-- // display error message -->
+<?php if (Yii::$app->session->hasFlash('error')): ?>
+    <div class="alert alert-danger alert-dismissable">
+         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+         <h4><i class="icon fa fa-check"></i>Saved!</h4>
+         <?= Yii::$app->session->getFlash('error') ?>
+    </div>
+<?php endif; ?>
 <?php $this->beginPage() ?>
 
 <head>
@@ -174,7 +192,8 @@ $fieldOptions1 = [
                   <button type="submit" class="btn btn-primary float-right">Sign in</button>
                 </div>
                 <div class="sign-info">
-                  <span class="dark-color d-inline-block line-height-2">Don't have an account? <a href="<?= Yii::$app->urlManagerFrontend->createUrl(['/signup']) ?>">Sign up</a></span>
+                  <!-- span class="dark-color d-inline-block line-height-2">Don't have an account? <a href="?= Yii::$app->urlManagerFrontend->createUrl(['login']) ?>">Sign in</a></span> -->
+                    <span class="dark-color d-inline-block line-height-2"> have an account? <a href="login">Sign in</a></span>
                   <ul class="iq-social-media">
                     <li><a href="#"><i class="ri-facebook-box-line"></i></a></li>
                     <li><a href="#"><i class="ri-twitter-line"></i></a></li>

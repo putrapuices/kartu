@@ -196,7 +196,9 @@ $this->params['breadcrumbs'][] = ['label' => 'Pendidikans', 'url' => ['create']]
  <div class="form-group">
        <div class="box-tools pull-right">
 
-<?= Html::a('<i class="fa fa-arrow-left"></i> Kembali',['keterangan/updatepencaker','id'=>$modelpendidikan->id_daftar],['class'=>'btn btn-default']); ?>
+<?= Html::a('<i class="glyphicon glyphicon-pencil"></i> EDIT',['keterangan/updatepencaker','id'=>$modelpendidikan->id_daftar],['class'=>'btn btn-default ']); ?>
+<?= Html::a('<i class="fa fa-arrow-left"></i> Kembali',['keterangan/create'],['class'=>'btn btn-default']); ?>
+
 </div>
 </div>
 </div>

@@ -43,14 +43,17 @@ class Keterangan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['keterangan_tgl'], 'required'],
             [['keterangan_tgl', 'keterangan_pendidikandatehapus'], 'safe'],
             [['keterangan_jkl', 'keterangan_prov', 'keterangan_kota', 'keterangan_kec', 'keterangan_status', 'id_daftar', 'keterangan_pendidikanstatus'], 'integer'],
             [['id_daftar'], 'required'],
+            [['keterangan_prov', 'keterangan_kota', 'keterangan_kec'], 'required'],
             [['keterangan_nama', 'keterangan_tempat'], 'string', 'max' => 100],
-            [['keterangan_alamat'], 'string', 'max' => 255],
+            [['keterangan_alamat','keterangan_alamat_domisili'], 'string', 'max' => 255],
             [['keterangan_hp'], 'string', 'max' => 12],
             [['keterangan_tb', 'keterangan_bb'], 'string', 'max' => 5],
             [['keterangan_email'], 'string', 'max' => 50],
+            [['keterangan_email'], 'required'],
             [['id_daftar'], 'exist', 'skipOnError' => true, 'targetClass' => Daftar::className(), 'targetAttribute' => ['id_daftar' => 'daftar_id']],
         ];
     }
@@ -62,19 +65,20 @@ class Keterangan extends \yii\db\ActiveRecord
     {
         return [
             'keterangan_id' => 'Keterangan ID',
-            'keterangan_nama' => 'Keterangan Nama',
-            'keterangan_tempat' => 'Keterangan Tempat',
-            'keterangan_tgl' => 'Keterangan Tgl',
-            'keterangan_jkl' => 'Keterangan Jkl',
-            'keterangan_alamat' => 'Keterangan Alamat',
-            'keterangan_prov' => 'Keterangan Prov',
-            'keterangan_kota' => 'Keterangan Kota',
-            'keterangan_kec' => 'Keterangan Kec',
-            'keterangan_hp' => 'Keterangan Hp',
+            'keterangan_nama' => 'Nama',
+            'keterangan_tempat' => 'Tempat Lahir',
+            'keterangan_tgl' => 'Tanggal Lahir',
+            'keterangan_jkl' => 'Jenis Kelamin',
+            'keterangan_alamat' => 'Alamat',
+            'keterangan_alamat_domisili' => 'Almat Saat Ini',
+            'keterangan_prov' => 'Provinsi',
+            'keterangan_kota' => 'Kota',
+            'keterangan_kec' => 'Kecamatan',
+            'keterangan_hp' => 'Nomor HP',
             'keterangan_status' => 'Keterangan Status',
-            'keterangan_tb' => 'Keterangan Tb',
-            'keterangan_bb' => 'Keterangan Bb',
-            'keterangan_email' => 'Keterangan Email',
+            'keterangan_tb' => 'Tinggi Badan',
+            'keterangan_bb' => 'Berat Badan',
+            'keterangan_email' => 'Email',
             'id_daftar' => 'Id Daftar',
             'keterangan_pendidikanstatus' => 'Keterangan Pendidikanstatus',
             'keterangan_pendidikandatehapus' => 'Keterangan Pendidikandatehapus',
@@ -96,8 +100,8 @@ class Keterangan extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getKeteranganProv()
-    {
+     public function getKeteranganProv()
+     {
         return $this->hasOne(RegionProvince::className(), ['id' => 'keterangan_prov']);
     }
 
@@ -125,27 +129,27 @@ class Keterangan extends \yii\db\ActiveRecord
     {
         $return = [];
         if ($this->keterangan_kec == '1'){
-         $envList = \yii\helpers\ArrayHelper::map(Desa::findBySql("select desa_id,nama_desa from Desa")->one(),'desa_id', 'nama_desa');
-         return $envList;  
-     } 
+           $envList = \yii\helpers\ArrayHelper::map(Desa::findBySql("select desa_id,nama_desa from Desa")->one(),'desa_id', 'nama_desa');
+           return $envList;  
+       } 
 
-     return $return;   
- }
+       return $return;   
+   }
 
- public function getvoucher()
- {
-   if($this->keterangan_kec == 3)
+   public function getvoucher()
    {
-    return "Income Voucher";
-}
-elseif($this->keterangan_kec == 4)
-{
-    return "Exepense Voucher";
-}
-else
-{
-   return "General Voucher"; 
-}
+     if($this->keterangan_kec == 3)
+     {
+        return "Income Voucher";
+    }
+    elseif($this->keterangan_kec == 4)
+    {
+        return "Exepense Voucher";
+    }
+    else
+    {
+     return "General Voucher"; 
+ }
 }
 
 

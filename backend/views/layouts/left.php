@@ -38,7 +38,7 @@
                     // ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug']],
                     // ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
                     ['label' => 'Dashboard', 'icon' => 'home', 'url' => ['/']],
-                    ['label' => 'Daftarkan PencaKer', 'icon' => 'user-plus', 'url' => ['/keterangan/cek']],
+                    // ['label' => 'Daftarkan PencaKer', 'icon' => 'user-plus', 'url' => ['/keterangan/cek']],
                     ['label' => 'Data PencaKer', 'icon' => 'list', 'url' => ['/keterangan']],
                     [
                         'label' => 'Data Utama',
@@ -60,8 +60,8 @@
                         'url' => '#',
                         'items' => [
                             ['label' => 'Halaman Laporan IPK', 'icon' => 'user', 'url' => ['/pegawai/halaman']],
-                            ['label' => 'Bulanan', 'icon' => 'book', 'url' => ['/laporan/bulanan']],
-                            ['label' => 'Pilih Tanggal', 'icon' => 'calendar', 'url' => ['/laporan/harian']],
+                            // ['label' => 'Bulanan', 'icon' => 'book', 'url' => ['/laporan/bulanan']],
+                            // ['label' => 'Pilih Tanggal', 'icon' => 'calendar', 'url' => ['/laporan/harian']],
                         ],
                     ],
                     // [
@@ -104,39 +104,39 @@
                 'items' => [
                     
                     ['label' => 'Menu NAKER', 'options' => ['class' => 'header']],
-                     ['label' => 'Daftar', 'icon' => 'file-code-o', 'url' => ['/keterangan/createidentitas'],],
-                    ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii']],
-                    ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug']],
-                    ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
-                    [
-                        'label' => 'Pengaturan User',
-                        'icon' => 'share',
-                        'url' => '#',
-                        'items' => [
-                            ['label' => 'user', 'icon' => 'file-code-o', 'url' => ['/user'],],
-                            ['label' => 'mimin/user', 'icon' => 'file-code-o', 'url' => ['/mimin/user'],],
-                            ['label' => 'mimin/role', 'icon' => 'file-code-o', 'url' => ['/mimin/role'],],
-                            ['label' => 'mimin/route', 'icon' => 'file-code-o', 'url' => ['/mimin/route'],],
-                            ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],],
-                            [
-                                'label' => 'Level One',
-                                'icon' => 'circle-o',
-                                'url' => '#',
-                                'items' => [
-                                    ['label' => 'Level Two', 'icon' => 'circle-o', 'url' => '#',],
-                                    [
-                                        'label' => 'Level Two',
-                                        'icon' => 'circle-o',
-                                        'url' => '#',
-                                        'items' => [
-                                            ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
-                                            ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+                     ['label' => 'Daftar', 'icon' => 'file-code-o', 'url' => ['/keterangan/create'],],
+                    // ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii']],
+                    // ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug']],
+                    // ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
+                    // [
+                    //     'label' => 'Pengaturan User',
+                    //     'icon' => 'share',
+                    //     'url' => '#',
+                    //     'items' => [
+                    //         ['label' => 'user', 'icon' => 'file-code-o', 'url' => ['/user'],],
+                    //         ['label' => 'mimin/user', 'icon' => 'file-code-o', 'url' => ['/mimin/user'],],
+                    //         ['label' => 'mimin/role', 'icon' => 'file-code-o', 'url' => ['/mimin/role'],],
+                    //         ['label' => 'mimin/route', 'icon' => 'file-code-o', 'url' => ['/mimin/route'],],
+                    //         ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],],
+                    //         [
+                    //             'label' => 'Level One',
+                    //             'icon' => 'circle-o',
+                    //             'url' => '#',
+                    //             'items' => [
+                    //                 ['label' => 'Level Two', 'icon' => 'circle-o', 'url' => '#',],
+                    //                 [
+                    //                     'label' => 'Level Two',
+                    //                     'icon' => 'circle-o',
+                    //                     'url' => '#',
+                    //                     'items' => [
+                    //                         ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
+                    //                         ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
+                    //                     ],
+                    //                 ],
+                    //             ],
+                    //         ],
+                    //     ],
+                    // ],
                 ],
             ]
         ) ?>

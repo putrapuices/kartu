@@ -26,7 +26,7 @@ $tombol = '{view} {update} {delete} ';
               <h3 class="box-title">DAFTAR PENCARI KERJA</h3>
               <div class="box-tools pull-right">
               <p>
-        <?= Html::a('TAMABAH AKUN PENCAKER', ['cek'], ['class' => 'glyphicon glyphicon-user btn btn-success']) ?>
+        <!-- ?= Html::a('TAMABAH AKUN PENCAKER', ['create'], ['class' => 'glyphicon glyphicon-user btn btn-success']) ?> -->
     </p>
 </div>
     <?= GridView::widget([

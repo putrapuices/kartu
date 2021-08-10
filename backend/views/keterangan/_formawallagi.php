@@ -106,46 +106,38 @@ if (Yii::$app->user->identity->level == 40) {
 </div>
 </div>
 <?php if (!$carilokasi){?>
-  <?php $form = ActiveForm::begin([
-       'id' => 'register-form',
-    'enableClientValidation' => true,
-    'options' => [
-        'validateOnSubmit' => true,
-        'class' => 'form'
-    ],
-  ]); ?>
+  <?php $form = ActiveForm::begin(); ?>
 
 
   <div class="row">
     <div class="form-group">
       <div class=" col-sm-6">    
 
-        <?= $form->field($model, 'keterangan_nama')->textInput(['maxlength' => true,'required'=>true]) ?>
+    <?= $form->field($model, 'keterangan_nama')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'keterangan_tempat')->textInput(['maxlength' => true,'required'=>true]) ?>
+    <?= $form->field($model, 'keterangan_tempat')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'keterangan_tgl')->widget(DatePicker::className(),[
-          'options' => ['placeholder' => '--Tanggal Lahir--'],
-          'type' => DatePicker::TYPE_COMPONENT_PREPEND,
-          'pluginOptions' => [
-            'autoclose'=>true,
-            'format' => 'yyyy-mm-dd',
-            'todayHighlight' => true
-          ]
-        ]) ?>
+      <?= $form->field($model, 'keterangan_tgl')->widget(DatePicker::className(),[
+                'options' => ['placeholder' => '--Tanggal Lahir--'],
+                'type' => DatePicker::TYPE_COMPONENT_PREPEND,
+                'pluginOptions' => [
+                    'autoclose'=>true,
+                    'format' => 'yyyy-mm-dd',
+                    'todayHighlight' => true
+                ]
+            ]) ?>
 
-        <?= $form->field($model, 'keterangan_jkl', [
-          'template' =>'{label}<br/>{input}{error}'
+     <?= $form->field($model, 'keterangan_jkl', [
+            'template' =>'{label}<br/>{input}{error}'
         ],['active' => true])->radioList(['1'=>'Laki - laki','2'=>'Perempuan'],['tag'=>'div','value'=>true,'required'=>true,'style' => 'display:inline','separator'=>'<br/>']);?>
 
-        <?= $form->field($model, 'keterangan_alamat')->textInput(['maxlength' => true]) ?>
-        <?= $form->field($model, 'keterangan_alamat_domisili')->textInput(['maxlength' => true]) ?>
-      </div>
-    </div>
+    <?= $form->field($model, 'keterangan_alamat')->textInput(['maxlength' => true]) ?>
+</div>
+</div>
     <div class="form-group">
       <div class=" col-sm-6">         
         <?php
-
+            // $kecamatan = ArrayHelper::map(\backend\models\Kecamatan::find()->asArray()->all(), 'kec_id', 'kec_nama');
 
         echo $form->field($model, 'keterangan_prov')->widget(Select2::classname(), [
           'data' => $data,
@@ -154,7 +146,6 @@ if (Yii::$app->user->identity->level == 40) {
           'pluginOptions' => [
             'allowClear' => true,
             'initialize' => true,
-            'options' => ['style' => 'font-family:Roboto, sans-serif !important;'],
           ],
         ])->label('Provinsi',['class'=>'body a',
         'style' => 'font-size: 20px']);
@@ -173,12 +164,12 @@ if (Yii::$app->user->identity->level == 40) {
         echo $form->field($model, 'keterangan_kec')->widget(Select2::classname(), [
           'data' => ArrayHelper::map(\backend\models\RegionDistrict::find()->asArray()->all(), 'id', 'name'),
 
-          'options'=>['placeholder'=>Yii::t('app','Pilih Kecamatan'), 'id'=> 'input_id_dusun',],
+          'options'=>['placeholder'=>Yii::t('app','Pilih Kelurahan/Desa/Nagari'), 'id'=> 'input_id_dusun',],
           'pluginOptions' => [
             'allowClear' => true,
             'initialize' => true,
           ],
-        ])->label('Kecamatan',['class'=>'body a',
+        ])->label('Kelurahan',['class'=>'body a',
         'style' => 'font-size: 20px']);
 
 
@@ -225,11 +216,10 @@ if (Yii::$app->user->identity->level == 40) {
          <i class="fa fa-envelope-o"></i>
          </span>{input}
          </div>
-         '],
-         ['inputOptions' => ['type'=>'email']], 
+         '], 
          [
            'inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control transparent']
-         ])->textInput(['required'=>true])->input('email', ['placeholder' => "Masukkan Email Anda"])->label("Email"); ?>
+         ])->textInput()->input('email', ['placeholder' => "Masukkan Email Anda"])->label("Email"); ?>
          
 
        </div></div>

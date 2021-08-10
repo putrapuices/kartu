@@ -69,7 +69,7 @@ $this->render('/layouts/dropdown.js')
             <?= $form->field($model, 'keterangan_alamat')->textarea(['rows' => 6])->label('Alamat Sesuai KTP')//ketinggian text area 6 baris ?>
         </div>
         <div class="col-md-6">
-            <!--Petunjuk isian fenomena-->
+           
             <hr/>
             <i>
 
@@ -80,9 +80,7 @@ $this->render('/layouts/dropdown.js')
 
 <div class="form-group">
     <div class=" col-sm-6">         
-            <?php
-            // $kecamatan = ArrayHelper::map(\backend\models\Kecamatan::find()->asArray()->all(), 'kec_id', 'kec_nama');
-
+            <?php        
             echo $form->field($model, 'keterangan_prov')->widget(Select2::classname(), [
                 'data' => $data,
                 
@@ -115,7 +113,6 @@ $this->render('/layouts/dropdown.js')
                 ],
             ])->label('Kelurahan',['class'=>'body a',
           'style' => 'font-size: 20px']);
-
 
             ?>
         </div>

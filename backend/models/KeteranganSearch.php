@@ -17,7 +17,7 @@ class KeteranganSearch extends Keterangan
     public function rules()
     {
         return [
-            [['keterangan_id', 'keterangan_jkl', 'keterangan_kel', 'keterangan_kec', 'keterangan_status', 'id_daftar', 'keterangan_pendidikanstatus','keterangan_pendidikanstatus'], 'integer'],
+            [['keterangan_id', 'keterangan_jkl', 'keterangan_prov', 'keterangan_kota','keterangan_kec', 'keterangan_status', 'id_daftar', 'keterangan_pendidikanstatus','keterangan_pendidikanstatus'], 'integer'],
             [['keterangan_nama', 'keterangan_tempat', 'keterangan_tgl', 'keterangan_alamat', 'keterangan_hp', 'keterangan_tb', 'keterangan_bb', 'keterangan_email'], 'safe'],
         ];
     }
@@ -61,7 +61,8 @@ class KeteranganSearch extends Keterangan
             'keterangan_id' => $this->keterangan_id,
             'keterangan_tgl' => $this->keterangan_tgl,
             'keterangan_jkl' => $this->keterangan_jkl,
-            'keterangan_kel' => $this->keterangan_kel,
+            'keterangan_prov' => $this->keterangan_prov,
+            'keterangan_kota' => $this->keterangan_kota,
             'keterangan_kec' => $this->keterangan_kec,
             'keterangan_status' => $this->keterangan_status,
             'id_daftar' => $this->id_daftar,
