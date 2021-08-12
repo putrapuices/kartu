@@ -88,7 +88,8 @@ class KeteranganController extends Controller
       $tanggal = Pendidikan::find()
         // -> where([$tglcari '>='"pendidikan_datehapus"])->all();
       ->where('pendidikan_datehapus >= :userid', [':userid' => $tglcari])->all();
-     
+        // var_dump($tanggal);die();
+
       $searchModel = new PendidikanSearch();
       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
       $dataProvider->query->where(':tglsekarang  >= pendidikan_datehapus  AND pendidikan_status = :pendidikan_status ', [':tglsekarang' => $tgl ,':pendidikan_status' => 1])->orderBy('pendidikan_datehapus ASC');
@@ -552,71 +553,80 @@ public function actionCreate()
   $model = new Keterangan();
   $modelpendidikan = new Pendidikan();
   $modellokasi = new Lokasi();
-  $idname = Yii::$app->user->identity->username;  
+
+  $idname = Yii::$app->user->identity->username;
+  // cari pada table keterangan
   $modelketerangan = Keterangan::find()
   -> where(['id_daftar'=> $idname])->one();
-        // var_dump( $idname);die();
+  // cari pda table 
+  $modelpendidikancari = Pendidikan::find()
+  -> where(['id_daftar'=> $idname])->one();
+        if ($modelketerangan==false){    
   if (Yii::$app->user->identity->level == 40){ 
-     $this->view->title = 'DAFTAR ISIAN PENCARI KERJA';
-    if ($idname){
-      if ($model->load(Yii::$app->request->post()) ) {
-       $model->id_daftar = $idname ;
-       $model->keterangan_email =Yii::$app->user->identity->email;
-       $model->save(false);
-       return $this->redirect(['/pendidikan/createbiasa']);
-     }
-   }
 
-   $modelpendidikan = new ActiveDataProvider([
-    'query' => Pendidikan::find()->where(['id_daftar'=> $idname])
-  ]);
-   $modelpengalaman = new ActiveDataProvider([
-    'query' => Pengalaman::find()->where(['id_daftar'=> $idname])
-  ]);
-
-   $modellokasi = Lokasi::find()
-   -> where(['id_daftar'=> $idname])->one();
-
-
-   return $this->render('create', [
-    'model' => $model,
-    'modelpendidikan' => $modelpendidikan,
-    'modelpengalaman' => $modelpengalaman,
-    'modellokasi' => $modellokasi,
-    'datakecamatan' => $this->getProvinces(),
-
-  ]);
- }
-// belum jalan yang diwah
- elseif (Yii::$app->user->identity->level == 1) {
+   $this->view->title = 'DAFTAR ISIAN PENCARI KERJA';
    if ($idname){
       if ($model->load(Yii::$app->request->post()) ) {
        $model->id_daftar = $idname ;
        $model->save(false);
        return $this->redirect(['/pendidikan/createbiasa']);
-     }
+     
    }
+ }
 
-   $modelpendidikan = new ActiveDataProvider([
-    'query' => Pendidikan::find()->where(['id_daftar'=> $idname])
-  ]);
-   $modelpengalaman = new ActiveDataProvider([
-    'query' => Pengalaman::find()->where(['id_daftar'=> $idname])
-  ]);
+ $modelpendidikan = new ActiveDataProvider([
+  'query' => Pendidikan::find()->where(['id_daftar'=> $idname])
+]);
+ $modelpengalaman = new ActiveDataProvider([
+  'query' => Pengalaman::find()->where(['id_daftar'=> $idname])
+]);
 
-   $modellokasi = Lokasi::find()
-   -> where(['id_daftar'=> $idname])->one();
+ $modellokasi = Lokasi::find()
+ -> where(['id_daftar'=> $idname])->one();
 
 
-   return $this->render('create', [
-    'model' => $model,
-    'modelpendidikan' => $modelpendidikan,
-    'modelpengalaman' => $modelpengalaman,
-    'modellokasi' => $modellokasi,
-    'datakecamatan' => $this->getProvinces(),
+ return $this->render('create', [
+  'model' => $model,
+  'modelpendidikan' => $modelpendidikan,
+  'modelpengalaman' => $modelpengalaman,
+  'modellokasi' => $modellokasi,
+  'datakecamatan' => $this->getProvinces(),
 
-  ]);
- }       
+]);
+}
+}elseif($modelketerangan==true){
+   return $this->redirect(['/pendidikan/createbiasa']);
+}
+// belum jalan yang dibawah
+elseif (Yii::$app->user->identity->level == 1) {
+ if ($idname){
+  if ($model->load(Yii::$app->request->post()) ) {
+   $model->id_daftar = $idname ;
+   $model->save(false);
+   return $this->redirect(['/pendidikan/createbiasa']);
+ }
+}
+
+$modelpendidikan = new ActiveDataProvider([
+  'query' => Pendidikan::find()->where(['id_daftar'=> $idname])
+]);
+$modelpengalaman = new ActiveDataProvider([
+  'query' => Pengalaman::find()->where(['id_daftar'=> $idname])
+]);
+
+$modellokasi = Lokasi::find()
+-> where(['id_daftar'=> $idname])->one();
+
+
+return $this->render('create', [
+  'model' => $model,
+  'modelpendidikan' => $modelpendidikan,
+  'modelpengalaman' => $modelpengalaman,
+  'modellokasi' => $modellokasi,
+  'datakecamatan' => $this->getProvinces(),
+
+]);
+}       
 }
 
 public function actionCreateidentitas()
@@ -679,8 +689,6 @@ public function actionCreatepencaker($id)
     'modelpendidikan' => $modelpendidikan,
     'modelpengalaman' => $modelpengalaman,
     'modellokasi' => $modellokasi,
-  'datakecamatan' => $this->getProvinces(),
-
   ]);
 
 

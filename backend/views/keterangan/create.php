@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Keterangan */
 
-$this->title = 'Keterangan';
-$this->params['breadcrumbs'][] = ['label' => 'Keterangans', 'url' => ['index']];
+// $this->title = 'ISIAN PENCARI KERJA';
+$this->params['breadcrumbs'][] = ['label' => 'AK/II', 'url' => ['create']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="keterangan-create">
@@ -14,7 +14,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="box-header">
             <!-- h3 class="box-title"><?= Html::encode($this->title) ?></h3> -->
         </div>
-        <h1><?= Html::encode($this->title) ?></h1>
+        <h1>
+          <!-- ?= Html::encode($this->title) ?> -->
+          
+        </h1>
         <div class="box-body">
           <?php if (Yii::$app->user->identity->level == 40){ ?>
             <?= $this->render('_form', [
@@ -31,8 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
             
            <?= $this->render('_form', [
                'model' => $model,
-               'datakecamatan' => $datakecamatan,
-               
+               'modelid' => $modelid,
+               'datakecamatan' => $datakecamatan,               
                'modelpendidikan' => $modelpendidikan,
                'modelpengalaman' => $modelpengalaman,
                'modellokasi' => $modellokasi,

@@ -7,8 +7,9 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-backend',
+    'id' => 'SIDAK',
     'timezone' => 'Asia/Jakarta',
+    'name'=>'SIDAK',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],

@@ -146,7 +146,7 @@ $fieldOptions1 = [
           <div class="col-md-6 position-relative">
             <div class="sign-in-from">
               <h1 class="mb-0">Silahkan SIGNUP</h1>
-              <p>Masukkan User, Email dan password untuk yang benar untuk dapatkan akun.</p>
+              <p>Masukkan User, Email dan password yang benar untuk dapatkan akun.</p>
               <form class="mt-4">
                 <div class="form-group">
                   <!-- <label for="exampleInputEmail1">User Name</label> -->
